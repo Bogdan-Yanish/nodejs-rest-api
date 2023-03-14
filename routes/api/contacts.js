@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 const {listContacts, getById, addContact, removeContact, updateContact } = require('../../controllers/contactsControllers');
-const { contactValidation, contactBodyValidation } = require('../../middlewares/validationMiddleware');
+const { contactValidation } = require('../../middlewares/validationMiddleware');
 
 router.get('/', listContacts);
 
@@ -13,6 +13,6 @@ router.post('/', contactValidation, addContact);
 
 router.delete('/:contactId', removeContact);
 
-router.put('/:contactId', contactBodyValidation, updateContact);
+router.put('/:contactId', contactValidation, updateContact);
 
 module.exports = router

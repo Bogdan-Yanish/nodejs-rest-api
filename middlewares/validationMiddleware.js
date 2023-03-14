@@ -4,6 +4,8 @@ const contactValidation = (req, res, next) => {
     const schema = Joi.object({
         name: Joi.string()
             .alphanum()
+            .min(3)
+            .max(30)
             .required(),
     
         email: Joi.string()
@@ -11,6 +13,9 @@ const contactValidation = (req, res, next) => {
             .required(),
     
         phone: Joi.string()
+            .alphanum()
+            .min(8)
+            .max(15)
             .required(),
     })
 
@@ -22,17 +27,8 @@ const contactValidation = (req, res, next) => {
     next();
 };
 
-const contactBodyValidation = (req, res, next) => {
-    if (!Object.keys(req.body).length) {
-      return res.status(400).json({ message: 'missing fields' });
-    }
-  
-    next();
-  };
-
 module.exports = {
-    contactValidation,
-    contactBodyValidation
+    contactValidation,    
 }
 
 
