@@ -8,17 +8,14 @@ const addContactValidation = (req, res, next) => {
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
             .required(),
     
-        phone: Joi.string()
-            .alphanum()
-            .required(),
+        phone: Joi.string().required(),
     })
 
     const { error } = schema.validate(req.body);
     if (error){
+        const fieldName = error.details[0].context.key;
         return res.status(400).json({
-            message: `missing required ${
-            error.message.replace(/"/g, "").split(" ", 1)
-        } field`});
+            message: `missing required ${fieldName} field`});
     }
 
     next();
