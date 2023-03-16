@@ -70,7 +70,7 @@ const updateContact = async (contactId, body) => {
   
         contacts[indexContact] = { ...contacts[indexContact], ...body };
   
-        fs.writeFile(contactsPath, JSON.stringify(contacts), "utf8");
+        fs.writeFile(contactsPath, JSON.stringify(contacts));
   
         return contacts[indexContact];
     } catch (error) {
