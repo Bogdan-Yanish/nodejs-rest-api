@@ -26,21 +26,21 @@ const removeContact = async (req, res) => {
     
     if(!contactToDelete) {
         res.status(404).json({message:"Not found"});
+    } else {
+        res.status(200).json({message:"Contact deleted!"});
     }
-    res.status(200).json({message:"Contact deleted!"});
 };
 
 const updateContact = async (req, res) => {
-    const { body } = req;
+    
     const { contactId } = req.params;
+    const { body } = req;
 
-    const updatedContact = await contactOperations.updateContact(contactId, body);
-
-    if(!updatedContact) {
-        res.status(404).json({message:"Not found"})
+    const updateContact = await contactOperations.updateContact(contactId, body);
+    if (!updateContact) {
+        return res.status(404).json({message: "Not Found!"});
     }
-
-    res.status(200).json(updatedContact);
+    res.status(200).json(updateContact);
 };
 
 module.exports = {

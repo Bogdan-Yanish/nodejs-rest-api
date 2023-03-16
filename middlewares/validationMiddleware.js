@@ -2,9 +2,7 @@ const Joi = require('joi');
 
 const addContactValidation = (req, res, next) => {
     const schema = Joi.object({
-        name: Joi.string()
-            .alphanum()
-            .required(),
+        name: Joi.string().required(),
     
         email: Joi.string()
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
@@ -33,7 +31,7 @@ const bodyContactValidation = (req, res, next) => {
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
         .optional(),
         phone:Joi.string().optional(),
-    })
+    }).or("name", "email", "phone");
 
     const { error } = schema.validate(req.body);
     if(error){

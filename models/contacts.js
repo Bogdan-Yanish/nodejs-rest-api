@@ -43,7 +43,7 @@ const removeContact = async (contactId) => {
         console.log(error.message);
     }
     
-}
+};
 
 const addNewContact = async (body) => {
     try {
@@ -56,25 +56,29 @@ const addNewContact = async (body) => {
     } catch (error) {
         console.log(error.message);
     }
-}
+};
 
 const updateContact = async (contactId, body) => {
     try {
         const data = await fs.readFile(contactsPath);
         const contacts = JSON.parse(data);
-
-        const indexContact = contacts.findIndex(contact => contact.id === contactId);
-        if(indexContact === -1) {
-        return null;
+        const indexContact = contacts.findIndex((contact) => contact.id === contactId);
+  
+        if (indexContact === -1) {
+            return null;
         }
-
-        contacts[indexContact] = {...contacts[indexContact], ...body};
-        fs.writeFile(contactsPath, JSON.stringify(contacts));
+  
+        contacts[indexContact] = { ...contacts[indexContact], ...body };
+  
+        fs.writeFile(contactsPath, JSON.stringify(contacts), "utf8");
+  
         return contacts[indexContact];
     } catch (error) {
         console.log(error.message);
     }
-}
+};
+
+
 
 module.exports = {
   listAllContacts,
