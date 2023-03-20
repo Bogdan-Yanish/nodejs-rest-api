@@ -9,6 +9,8 @@ const addContactValidation = (req, res, next) => {
             .required(),
     
         phone: Joi.string().required(),
+
+        favorite: Joi.boolean(),
     })
 
     const { error } = schema.validate(req.body);
@@ -22,27 +24,30 @@ const addContactValidation = (req, res, next) => {
 };
 
 const bodyContactValidation = (req, res, next) => {
-    const schema = Joi.object({
-        name: Joi.string().optional(),
-        email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-        .optional(),
-        phone:Joi.string().optional(),
-    }).or("name", "email", "phone");
-
-    const { error } = schema.validate(req.body);
-    if(error){
-        return res.status(400).json({
-            message: "missing fields",
-        })
+    if (!Object.keys(req.body).length) {
+        return res.status(400).json({ message: 'missing fields' });
     }
 
     next();
-}
+};
+
+const contactStatusValidation = (req, res, next) => {
+    const schema = Joi.object({ favorite: Joi.boolean().required() });
+  
+    const { error } = schema.validate(req.body);
+  
+    if (error) {
+        console.log(error);
+        return res.status(400).json({message: "missing field favorite"});
+    }
+    
+    next();
+};
 
 module.exports = {
     addContactValidation,
-    bodyContactValidation  
+    bodyContactValidation,
+    contactStatusValidation,    
 }
 
 
