@@ -7,7 +7,6 @@ const listAllContacts = async () => {
     } catch (error) {
         console.log(error.message);
     }
-    
 };
 
 const getContactById = async (contactId) => {
@@ -21,11 +20,10 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {
     try {
-        await Contact.findByIdAndRemove({_id: contactId});
+        await Contact.findByIdAndDelete(contactId);
     } catch (error) {
         console.log(error.message);
     }
-    
 };
 
 const addNewContact = async (body) => {
@@ -56,11 +54,20 @@ const updateContactFavorite = async (contactId, body) => {
     }
 };
 
+const isExistContact = async(contactId) => {
+    try {
+        return await Contact.exists({_id: contactId});
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports = {
   listAllContacts,
   getContactById,
   removeContact,
   addNewContact,
   updateContact,
-  updateContactFavorite
+  updateContactFavorite,
+  isExistContact
 }
