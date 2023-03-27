@@ -2,7 +2,7 @@ const express = require('express')
 
 const router = express.Router()
 
-const { listContacts, getById, addContact, removeContact, updateContact, updateStatusContact } = require('../../controllers/contactsControllers');
+const { listContacts, getById, addContact, removeContact, updateContact, updateStatusContact } = require('../../controllers/contacts');
 const { addContactValidation, bodyContactValidation, contactStatusValidation } = require('../../middlewares/contactValidation');
 const authValidation = require('../../middlewares/authValidation')
 const { controllerWrap } = require('../../helpers/controllerWrap');

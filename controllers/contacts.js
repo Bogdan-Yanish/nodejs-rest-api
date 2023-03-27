@@ -1,22 +1,17 @@
-// const contactOperations = require('../service/contacts');
 const Contact = require('../models/contactSchema');
-
-// const listContacts = async (req, res) => {
-//     // res.status(200).json(await contactOperations.listAllContacts());
-//     const {_id} = req.user;
-//     const allContacts = await Contact.find({owner: _id})
-//     res.status(200).json(allContacts);
-// };
 
 const listContacts = async (req, res) => {
     const { _id } = req.user;
     const { page = 1, limit = 20, favorite } = req.query;
     const skip = (page - 1) * limit;
   
-    const queryParams = favorite ? { owner: _id, favorite } : { owner: _id };
+    const queryParams = favorite
+        ? { owner: _id, favorite } 
+        : { owner: _id };
+
     const allContacts = await Contact.find(queryParams, "", {
       skip,
-      limit: +limit,
+      limit: Number(limit),
     }).populate("owner", "_id email");
     res.status(200).json(allContacts);
   };
@@ -43,7 +38,6 @@ const removeContact = async (req, res) => {
 };
 
 const updateContact = async (req, res) => {
-    
     const { contactId } = req.params;
     const { body } = req;
 
@@ -52,11 +46,10 @@ const updateContact = async (req, res) => {
 };
 
 const updateStatusContact = async (req, res) => {
-    
     const { contactId } = req.params;
     const { favorite } = req.body;
 
-    const updateContactStatus = await Contact.findByIdAndUpdate({contactId}, {favorite}, {new: true});
+    const updateContactStatus = await Contact.findByIdAndUpdate({ _id: contactId}, {favorite}, {new: true});
     res.status(200).json(updateContactStatus);
 };
 

@@ -38,9 +38,23 @@ const userLoginValidation = (req, res, next) => {
     next();
 };
 
+const userStatusValidation = (req, res, next) => {
+    const schema = Joi.object({ subscription: Joi.string().valid("starter", "pro", "business")});
+  
+    const { error } = schema.validate(req.body);
+  
+    if (error) {
+        error.status = 400;
+        next(error);
+    }
+    
+    next();
+};
+
 module.exports = {
     userRegisterValidation,
-    userLoginValidation
+    userLoginValidation,
+    userStatusValidation
 }
 
 
