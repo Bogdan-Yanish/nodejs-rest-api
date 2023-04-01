@@ -10,12 +10,20 @@
 //   next();
 // };
 
-const { isExistContact } = require('../models/contacts');
+const Contact = require('../models/contactSchema');
+
+const isExistContact = async(contactId) => {
+    try {
+        return await Contact.exists({_id: contactId});
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 const idValidation = async (req, res, next) => {
     const { contactId } = req.params;        
     const contactIsExist = await isExistContact(contactId);
-
+    
     if(contactIsExist){
         return next();
     }

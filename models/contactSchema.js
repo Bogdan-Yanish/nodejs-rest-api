@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
  
-
 const contactsSchema = new Schema (
     {
         name: {
@@ -18,6 +17,10 @@ const contactsSchema = new Schema (
             type: Boolean,
             default: false,
         },
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: 'user',
+        }
     },
     { versionKey: false, timestamps: true }
 );
