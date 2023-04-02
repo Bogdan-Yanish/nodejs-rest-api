@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const path = require("path");
 const fs = require("fs").promises;
-const Jimp = require("jimp");
+const avatarJimpManipulation = require("../helpers/avatarJimpManipulation")
+
 
 const User = require('../models/userSchema');
 const {SECRET_KEY} = process.env;
@@ -85,18 +86,10 @@ const updateAvatarUser = async (req, res, next) => {
     const {_id: id } = req.user;
     const uniqueAvatar = `${id}_${originalname}`;
 
+    await avatarJimpManipulation(tmpUpload);
+
     try {
         const resultUpload = path.join(avatarsDir, uniqueAvatar);
-        
-        const avatarImg = await Jimp.read(tmpUpload);
-        await avatarImg
-            .cover(
-                250,
-                250,
-                Jimp.HORIZONTAL_ALIGN_CENTER || Jimp.VERTICAL_ALIGN_MIDDLE
-                )
-            .writeAsync(tmpUpload);
-
         await fs.rename(tmpUpload, resultUpload);
         const avatarURL = path.join("public", "avatars", uniqueAvatar);
         await User.findByIdAndUpdate(req.user._id, {avatarURL});
