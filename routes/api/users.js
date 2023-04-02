@@ -2,7 +2,7 @@ const express = require('express')
 
 const router = express.Router()
 
-const { register, login, getCurrentUser, logout, updateStatusUser } = require('../../controllers/users')
+const { register, login, getCurrentUser, logout, updateStatusUser, updateAvatarUser } = require('../../controllers/users')
 const { controllerWrap } = require('../../helpers/controllerWrap');
 const { userRegisterValidation, userLoginValidation, userStatusValidation } = require('../../middlewares/userValidation');
 const authValidation = require('../../middlewares/authValidation');
@@ -18,8 +18,6 @@ router.post('/logout', authValidation, controllerWrap(logout));
 
 router.patch('/', authValidation, userStatusValidation, controllerWrap(updateStatusUser));
 
-router.patch('/users/avatar', authValidation, upload.single("avatar"));
-
-router.post('/avatar', upload.single("avatar"));
+router.patch('/avatars', authValidation, upload.single("avatar"), controllerWrap(updateAvatarUser));
 
 module.exports = router;
