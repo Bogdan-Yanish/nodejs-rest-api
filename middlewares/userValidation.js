@@ -12,17 +12,12 @@ const userRegisterValidation = (req, res, next) => {
     })
 
     const { error } = schema.validate(req.body);
-    // if (error){
-    //     const fieldName = error.details[0].context.key;
-    //     return res.status(400).json({
-    //         message: `missing required ${fieldName} field`});
-    // }
-
-    if (error) {
-        error.status = 400;
-        next(error);
+    if (error){
+        const fieldName = error.details[0].context.key;
+        return res.status(400).json({
+            message: `missing required ${fieldName} field`});
     }
- 
+
     next();
 };
 
@@ -36,15 +31,10 @@ const userLoginValidation = (req, res, next) => {
     })
 
     const { error } = schema.validate(req.body);
-    // if (error){
-    //     const fieldName = error.details[0].context.key;
-    //     return res.status(400).json({
-    //         message: `missing required ${fieldName} field`});
-    // }
-
-    if (error) {
-        error.status = 400;
-        next(error);
+    if (error){
+        const fieldName = error.details[0].context.key;
+        return res.status(400).json({
+            message: `missing required ${fieldName} field`});
     }
 
     next();
