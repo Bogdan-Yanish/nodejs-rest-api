@@ -46,6 +46,41 @@ const register = async (req, res) => {
     })
 };
 
+const verifyEmail = async(req, res) => {
+    const {verificationToken} = req.params;
+    const user = await User.findOne({verificationToken});
+    if(!user) {
+        res.status(404).json({message:"User not found"})
+    }
+    
+    await User.findByIdAndUpdate(user._id, {verify:true, verificationToken:null});
+    res.status(200).json({message:"Verification successful"})
+};
+
+const resendVerifyEmail = async(req, res) => {
+    const {email} = req.body;
+    const user = await User.findOne({email});
+    if(!user){
+        return res.status(404).json({message:"Not found"})
+    }
+    if(user.verify){
+        return res.status(400).json({message:"Verification has already been passed"})
+    }
+
+    const mailToSend = {
+        to: email,
+        subject: "Welcome! Confirm your email!",
+        html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">
+                Confirm your email
+            </a>`,
+    };
+
+    await sendEmail(mailToSend);
+
+    return res.status(200).json({message:"Verification email sent"});
+    
+};
+
 const login = async(req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({email});
@@ -55,6 +90,10 @@ const login = async(req, res) => {
         res.status(401).json({message: "Email or password is wrong"})
     }
     
+    if(!user.verify){
+        return res.status(401).json({message:"Email not verified"});
+    };
+
     const { subscription } = user;
     const payload = {
         id: user._id
@@ -121,5 +160,7 @@ module.exports = {
     getCurrentUser,
     logout, 
     updateStatusUser,
-    updateAvatarUser
+    updateAvatarUser,
+    verifyEmail,
+    resendVerifyEmail
 }

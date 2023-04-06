@@ -2,15 +2,17 @@ const express = require('express')
 
 const router = express.Router()
 
-const { register, login, getCurrentUser, logout, updateStatusUser, updateAvatarUser } = require('../../controllers/users')
+const { register, login, getCurrentUser, logout, updateStatusUser, updateAvatarUser, verifyEmail, resendVerifyEmail } = require('../../controllers/users')
 const { controllerWrap } = require('../../helpers/controllerWrap');
-const { userRegisterValidation, userLoginValidation, userStatusValidation } = require('../../middlewares/userValidation');
+const { userRegisterValidation, userLoginValidation, userStatusValidation, userEmailValidation } = require('../../middlewares/userValidation');
 const authValidation = require('../../middlewares/authValidation');
 const upload = require('../../middlewares/upload');
 
 router.post('/register', userRegisterValidation, controllerWrap(register));
 
-router.get('/verify/:verificationToken');
+router.get('/verify/:verificationToken', verifyEmail);
+
+router.post('/verify', userEmailValidation, resendVerifyEmail);
 
 router.post('/login', userLoginValidation, controllerWrap(login));
 
