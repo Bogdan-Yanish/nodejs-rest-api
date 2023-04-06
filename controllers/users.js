@@ -3,7 +3,9 @@ const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const path = require("path");
 const fs = require("fs").promises;
-const avatarJimpManipulation = require("../helpers/avatarJimpManipulation")
+const uuid = require("uuid").v4;
+const avatarJimpManipulation = require("../helpers/avatarJimpManipulation");
+const sendEmail = require("../helpers/emailSender");
 
 
 const User = require('../models/userSchema');
@@ -20,7 +22,20 @@ const register = async (req, res) => {
     
     const salt = bcrypt.genSaltSync(10);
     const hashPassword = bcrypt.hashSync(password, salt);
-    const newUser = await User.create({email, password: hashPassword, avatarURL});
+    const verificationToken = uuid();
+
+    const newUser = await User.create({email, password: hashPassword, avatarURL, verificationToken});
+    
+    const mailToSend = {
+        to: email,
+        subject: "Welcome! Confirm your email!",
+        html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">
+                Confirm your email
+            </a>`,
+    };
+
+    await sendEmail(mailToSend);
+
     const { subscription } = newUser;
     res.status(201).json({
         user: {
