@@ -52,10 +52,28 @@ const userStatusValidation = (req, res, next) => {
     next();
 };
 
+const userEmailValidation = (req, res, next) => {
+    const schema = Joi.object({
+        email: Joi.string()
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
+            .required(),
+    })
+
+    const { error } = schema.validate(req.body);
+    if (error){
+        // const fieldName = error.details[0].context.key;
+        return res.status(400).json({
+            message: "Only email field is required"});
+    }
+
+    next();
+};
+
 module.exports = {
     userRegisterValidation,
     userLoginValidation,
-    userStatusValidation
+    userStatusValidation,
+    userEmailValidation
 }
 
 
